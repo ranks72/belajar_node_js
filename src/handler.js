@@ -1,5 +1,5 @@
 const {nanoid} = require('nanoid');
-const {books} = require('./books');
+const books = require('./books');
 
 const addBookHandler = (request, h) => {
   const {
@@ -8,11 +8,34 @@ const addBookHandler = (request, h) => {
     author,
     summary,
     publisher,
+    pageCount,
+    readPage,
+    reading,
   } = request.payload;
 
   const id = nanoid(16);
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
+  const finished = pageCount === readPage;
+
+  if (name == '') {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. Mohon isi nama buku',
+    });
+    response.code(400);
+    return response;
+  }
+
+  if (readPage > pageCount) {
+    const response = h.response({
+      status: 'fail',
+      message: `Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount`,
+    });
+
+    response.code(400);
+    return response;
+  }
 
   const newBook = {
     id,
@@ -21,20 +44,24 @@ const addBookHandler = (request, h) => {
     author,
     summary,
     publisher,
+    pageCount,
+    readPage,
+    finished,
+    reading,
     insertedAt,
     updatedAt,
   };
 
   books.push(newBook);
 
-  const isSuccess = notes.filter((note) => note.id === id).length > 0;
+  const isSuccess = books.filter((book) => book.id === id).length > 0;
 
   if (isSuccess) {
     const response = h.response({
       status: 'success',
-      message: 'Buku gagal ditambahkan',
+      message: 'Buku berhasil ditambahkan',
       data: {
-        noteId: id,
+        bookId: id,
       },
     });
     response.code(201);
@@ -48,4 +75,19 @@ const addBookHandler = (request, h) => {
   return response;
 };
 
-module.exports = {addBookHandler};
+const getAllBooksHandler = (request, h) => ({
+  status: 'success',
+  data: {
+    id,
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    insertedAt,
+    updatedAt,
+  },
+});
+
+
+module.exports = {addBookHandler, getAllBooksHandler};
