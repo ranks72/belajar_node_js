@@ -18,7 +18,7 @@ const addBookHandler = (request, h) => {
   const updatedAt = insertedAt;
   const finished = pageCount === readPage;
 
-  if (name == '') {
+  if (!name) {
     const response = h.response({
       status: 'fail',
       message: 'Gagal menambahkan buku. Mohon isi nama buku',
@@ -75,19 +75,22 @@ const addBookHandler = (request, h) => {
   return response;
 };
 
-const getAllBooksHandler = (request, h) => ({
-  status: 'success',
-  data: {
-    id,
-    name,
-    year,
-    author,
-    summary,
-    publisher,
-    insertedAt,
-    updatedAt,
-  },
-});
+const getAllBooksHandler = (request, h) => {
+  const response = h.response({
+    status: 'success',
+    data: {
+      books: books.map((book) => ({
+        id: book.id,
+        name: book.name,
+        publisher: book.publisher,
+      }),
+      ),
+    },
+  });
+
+  response.code(200);
+  return response;
+};
 
 
 module.exports = {addBookHandler, getAllBooksHandler};
