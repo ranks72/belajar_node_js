@@ -76,7 +76,7 @@ const addBookHandler = (request, h) => {
 };
 
 const getAllBookHandler = (request, h) => {
-  const {name} = request.query;
+  const {name, finished, reading} = request.query;
 
   if (name !== undefined) {
     const book = books.filter(
