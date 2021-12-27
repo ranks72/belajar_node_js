@@ -99,6 +99,48 @@ const getAllBookHandler = (request, h) => {
     return response;
   }
 
+  if (finished !== undefined) {
+    const book = books.filter(
+        (book) => Number(book.finished) === Number(finished),
+    );
+
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: book.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        }),
+        ),
+      },
+    });
+
+    response.code(200);
+    return response;
+  }
+
+  if (reading !== undefined) {
+    const book = books.filter(
+        (book) => Number(book.reading) === Number(reading),
+    );
+
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: book.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        }),
+        ),
+      },
+    });
+
+    response.code(200);
+    return response;
+  }
+
   const response = h.response({
     status: 'success',
     data: {
