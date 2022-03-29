@@ -1,1 +1,1 @@
-nodemon ./src/server.js
+web: npm start
